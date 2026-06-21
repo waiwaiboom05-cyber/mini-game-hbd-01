@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Game HBD</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background: #ffe6f2;
+        }
+
+        h1 {
+            color: #ff3399;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            background: #ff99cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .matched {
+            background: #66cc66;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎂 Happy Birthday 🎂</h1>
+    <p>จับคู่การ์ดให้ครบเพื่อปลดล็อกคำอวยพร!</p>
+    <div class="grid" id="game"></div>
+    <p id="message"></p>
+
+    <script>
+    const symbols = ["🎂","🎂","💖","💖","🎁","🎁","🌹","🌹"];
+    let shuffled = symbols.sort(() => 0.5 - Math.random());
+    const game = document.getElementById("game");
+    let firstCard = null;
+
+    shuffled.forEach((sym, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.symbol = sym;
+      card.textContent = "?";
+      card.onclick = () => {
+        if (card.textContent !== "?") return;
+        card.textContent = sym;
+        if (!firstCard) {
+          firstCard = card;
+        } else {
+          if (firstCard.dataset.symbol === card.dataset.symbol) {
+            firstCard.classList.add("matched");
+            card.classList.add("matched");
+            firstCard = null;
+            if (document.querySelectorAll(".matched").length === symbols.length) {
+              document.getElementById("message").textContent = "💝 สุขสันต์วันเกิดนะที่รัก 💝";
+            }
+          } else {
+            setTimeout(() => {
+              firstCard.textContent = "?";
+              card.textContent = "?";
+              firstCard = null;
+            }, 800);
+          }
+        }
+      };
+      game.appendChild(card);
+    });
+    </script>
+</body>
+</html>
