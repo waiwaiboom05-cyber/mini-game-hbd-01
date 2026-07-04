@@ -1,85 +1,204 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>Mini Game HBD</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            background: #ffe6f2;
-        }
+  <meta charset="UTF-8">
+  <title>Happy Birthday มุน้อย</title>
+  <style>
+    body {
+      font-family: "Dancing Script", cursive;
+      text-align: center;
+      background-color: #F0EDE8; /* Pantone 2026 Cloud Dancer */
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
 
-        h1 {
-            color: #ff3399;
-        }
+    .page {
+      display: none;
+      background-color: rgba(255,255,255,0.85);
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      padding: 30px;
+      margin: 60px auto;
+      width: 80%;
+      max-width: 500px;
+      transition: opacity 0.5s ease;
+      position: relative;
+      z-index: 2;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 100px);
-            gap: 10px;
-            justify-content: center;
-        }
+    .active {
+      display: block;
+      opacity: 1;
+    }
 
-        .card {
-            width: 100px;
-            height: 100px;
-            background: #ff99cc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 8px;
-        }
+    h1 {
+      color: #E8C9A1; /* Soft Gold */
+    }
 
-        .matched {
-            background: #66cc66;
-            color: white;
-        }
-    </style>
+    button {
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+
+    .green { background:#2E8B57; } /* เขียวเข้ม */
+    .red { background:#B22222; }   /* แดงเข้ม */
+    .next { background:#8B4513; }  /* น้ำตาลเข้ม */
+
+    button:hover { transform: scale(1.05); }
+
+    /* เอฟเฟกต์ประกายแสงสีน้ำเงิน */
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #1E90FF; /* DodgerBlue */
+      border-radius: 50%;
+      animation: twinkle 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* เอฟเฟกต์หัวใจ */
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      color: red;
+      animation: floatUp 3s ease-out forwards;
+      pointer-events: none;
+    }
+
+    /* เอฟเฟกต์โลโก้ Chelsea */
+    .logo {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: floatUp 3s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-150px); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
-    <h1>🎂 Happy Birthday 🎂</h1>
-    <p>จับคู่การ์ดให้ครบเพื่อปลดล็อกคำอวยพร!</p>
-    <div class="grid" id="game"></div>
-    <p id="message"></p>
 
-    <script>
-    const symbols = ["🎂","🎂","💖","💖","🎁","🎁","🌹","🌹"];
-    let shuffled = symbols.sort(() => 0.5 - Math.random());
-    const game = document.getElementById("game");
-    let firstCard = null;
+  <!-- เพลง Kiss the Rain -->
+  <audio id="bgMusic" loop>
+    <source src="https://archive.org/download/yiruma-frame-2017/Kiss%20The%20Rain%20%28%27frame%27%20Ver.%29.mp3" type="audio/mpeg">
+  </audio>
 
-    shuffled.forEach((sym, i) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.dataset.symbol = sym;
-      card.textContent = "?";
-      card.onclick = () => {
-        if (card.textContent !== "?") return;
-        card.textContent = sym;
-        if (!firstCard) {
-          firstCard = card;
-        } else {
-          if (firstCard.dataset.symbol === card.dataset.symbol) {
-            firstCard.classList.add("matched");
-            card.classList.add("matched");
-            firstCard = null;
-            if (document.querySelectorAll(".matched").length === symbols.length) {
-              document.getElementById("message").textContent = "💝 สุขสันต์วันเกิดนะที่รัก 💝";
-            }
-          } else {
-            setTimeout(() => {
-              firstCard.textContent = "?";
-              card.textContent = "?";
-              firstCard = null;
-            }, 800);
-          }
-        }
-      };
-      game.appendChild(card);
-    });
-    </script>
+  <!-- หน้าแรก -->
+  <div id="page1" class="page active">
+    <h1>To my มุน้อย</h1>
+    <p>
+      Happy for your 29th birthday<br>
+      You are grown up very cuttest.<br>
+      Wish you have good health<br>
+      Please take care of yourself.<br>
+      If you happy. So, I will happy too.
+    </p>
+    <button class="next" onclick="startGame()">เริ่มเข้าคำถาม</button>
+  </div>
+
+  <!-- Question 1 -->
+  <div id="q1" class="page">
+    <h2>Question 1 : Is "มุน้อย" very cute ?</h2>
+    <button class="green" onclick="goTo('q1_result')">Absolutely "Yes"</button>
+    <button class="red" onclick="goTo('q1_result')">Just red color, But still "Yes"</button>
+  </div>
+
+  <!-- Result Q1 -->
+  <div id="q1_result" class="page">
+    <h3>Very good, You're problaby my มุน้อย. Let's go to next question</h3>
+    <button class="next" onclick="goTo('q2')">Next Question</button>
+  </div>
+
+  <!-- Question 2 -->
+  <div id="q2" class="page">
+    <h2>Question 2 : Are you gonna use helmet when take a motorcycle. and continue take care of your health ?</h2>
+    <button class="green" onclick="goTo('q2_result1')">Yes, I will</button>
+    <button class="red" onclick="goTo('q2_result2')">Yes, But helmet is make my hair get worse</button>
+  </div>
+
+  <!-- Result Q2 Choice 1 -->
+  <div id="q2_result1" class="page">
+    <h3>Good job. You're my มุน้อย. I know wearing helmet may caused your hair getting worse. So, I have something to you on the backseat ^_^.</h3>
+  </div>
+
+  <!-- Result Q2 Choice 2 -->
+  <div id="q2_result2" class="page">
+    <h3>I know that you concern about your hair when wearing helmet. So, I got something that problaby make your hairstyle getting better, Please look at the back seat</h3>
+  </div>
+
+  <script>
+    function startGame() {
+      goTo('q1');
+      playMusic(); // เริ่มเพลงเมื่อกดปุ่มเริ่ม
+      showEffects(); // แสดงหัวใจ+โลโก้ Chelsea
+    }
+
+    function goTo(pageId) {
+      document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      showEffects(); // แสดงหัวใจ+โลโก้ Chelsea ทุกครั้งที่เปลี่ยนหน้า
+    }
+
+    function playMusic() {
+      const music = document.getElementById("bgMusic");
+      music.play().catch(err => {
+        console.log("Autoplay ถูกบล็อก ต้องคลิกปุ่มก่อนถึงจะเล่นได้", err);
+      });
+    }
+
+    // สร้างประกายแสงระยิบระยับสีน้ำเงิน
+    for (let i = 0; i < 40; i++) {
+      let sparkle = document.createElement("div");
+      sparkle.className = "sparkle";
+      sparkle.style.top = Math.random() * window.innerHeight + "px";
+      sparkle.style.left = Math.random() * window.innerWidth + "px";
+      sparkle.style.animationDelay = (Math.random() * 2) + "s";
+      document.body.appendChild(sparkle);
+    }
+
+    // ฟังก์ชันหัวใจ+โลโก้ Chelsea ลอย
+    function showEffects() {
+      for (let i = 0; i < 6; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = (window.innerHeight - 50) + "px";
+        heart.style.animationDelay = (Math.random() * 1) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }
+      for (let i = 0; i < 4; i++) {
+        const logo = document.createElement("div");
+        logo.className = "logo";
+        logo.style.left = Math.random() * window.innerWidth + "px";
+        logo.style.top = (window.innerHeight - 50) + "px";
+        logo.style.animationDelay = (Math.random() * 1) + "s";
+        document.body.appendChild(logo);
+        setTimeout(() => logo.remove(), 3000);
+      }
+    }
+  </script>
+
 </body>
 </html>
