@@ -98,11 +98,6 @@
 </head>
 <body>
 
-  <!-- เพลง Kiss the Rain -->
-  <audio id="bgMusic" loop>
-    <source src="https://archive.org/download/yiruma-frame-2017/Kiss%20The%20Rain%20%28%27frame%27%20Ver.%29.mp3" type="audio/mpeg">
-  </audio>
-
   <!-- หน้าแรก -->
   <div id="page1" class="page active">
     <h1>To my มุน้อย</h1>
@@ -149,7 +144,6 @@
   <script>
     function startGame() {
       goTo('q1');
-      playMusic(); // เริ่มเพลงเมื่อกดปุ่มเริ่ม
       showEffects(); // แสดงหัวใจ+โลโก้ Chelsea
     }
 
@@ -157,13 +151,6 @@
       document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
       showEffects(); // แสดงหัวใจ+โลโก้ Chelsea ทุกครั้งที่เปลี่ยนหน้า
-    }
-
-    function playMusic() {
-      const music = document.getElementById("bgMusic");
-      music.play().catch(err => {
-        console.log("Autoplay ถูกบล็อก ต้องคลิกปุ่มก่อนถึงจะเล่นได้", err);
-      });
     }
 
     // สร้างประกายแสงระยิบระยับสีน้ำเงิน
